@@ -2,12 +2,12 @@
     const main = document.querySelector('main');
     const SIZE = 10;
     const BOMBS_PER_TICK = 3;
-    const matrix = [];   // DOM-клетки
-    let bombs = [];      // данные: bombs[row][col] === true / false
+    const matrix = [];   // DOM-cells
+    let bombs = [];      // data: bombs[row][col] === true / false
     const BOMB_INTERVAL = 1500;
     const BULLET_INTERVAL = BOMB_INTERVAL / 3;
 
-    // создаём поле
+    // create field
     for (let i = 0; i < SIZE; i++) {
         const row = document.createElement('div');
         row.className = 'row';
@@ -24,13 +24,13 @@
     }
 
     function moveBullets() {
-        bullets.forEach((b) => b.row--);                   // летим вверх
-        bullets = bullets.filter((b) => b.row >= 0);       // вылетели за поле: удаляем
+        bullets.forEach((b) => b.row--);                   // go up
+        bullets = bullets.filter((b) => b.row >= 0);       // delete if touch the border
         // попадание в бомбу
         bullets = bullets.filter((b) => {
             if (bombs[b.row][b.col]) {
-                bombs[b.row][b.col] = false;               // бомба уничтожена
-                return false;                              // выстрел тоже исчезает
+                bombs[b.row][b.col] = false;               // bomb is destroyed
+                return false;                              // bullet disappear
             }
             return true;
         });
@@ -40,23 +40,23 @@
         return Math.floor(Math.random() * max);
     }
 
-    // сдвиг данных вниз на одну строку
+    // shift data to  next row
     function shiftDown() {
-        const next = [new Array(SIZE).fill(false)]; // новая пустая строка 0
+        const next = [new Array(SIZE).fill(false)]; // new empty row 0
         for (let i = 0; i < SIZE - 1; i++) {
-            next.push(bombs[i]);                    // строка i становится i+1
+            next.push(bombs[i]);                    // row 0 stay i+1
         }
-        bombs = next;                               // последняя строка выпадает
+        bombs = next;                               // delete last row
     }
 
-    // новые бомбы в верхней строке
+    // generate new bombs row 0
     function generateBombs() {
         for (let k = 0; k < BOMBS_PER_TICK; k++) {
             bombs[0][randomInt(SIZE)] = true;
         }
     }
 
-    // отрисовка данных на поле
+    // rendering data on the field
     function render() {
         for (let i = 0; i < SIZE; i++) {
             for (let j = 0; j < SIZE; j++) {
@@ -97,7 +97,7 @@
     document.addEventListener('keydown', (e) => {
         switch (e.key) {
             case 'ArrowUp':
-                if (e.repeat) return; // не стрелять очередью при удержании
+                if (e.repeat) return; // make single bullets
                 bullets.push({ row: playerRow - 1, col: playerCol });
                 break;
             case 'ArrowLeft':
@@ -107,10 +107,10 @@
                 if (playerCol < SIZE - 1) playerCol++;
                 break;
             default:
-                return;            // другие клавиши игнорируем
+                return;            // ignore another keyboards
         }
 
-        e.preventDefault();        // чтобы страница не прокручивалась стрелками
+        e.preventDefault();        // not approve scrolling page
         setInterval(() => {
             moveBullets();
             render();
