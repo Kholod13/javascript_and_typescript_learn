@@ -16,6 +16,31 @@ ship.show();
 const matrix = []
 const bombs = [];
 
+//own version
+// const bombTimer = setInterval(()=>{
+//     const tmpArray = [];
+//     for (let i = SIZE; i < BOARD_SIZE/4; i++) {
+//         const bomb = new Ship(getRandom(), 0, SIZE, 'red');
+//         board.appendChild(bomb.id());
+//         bomb.show();
+//         tmpArray.push(bomb);
+//     }
+//     matrix.unshift(tmpArray);
+//
+//     for (let j = matrix.length-1; j != 0 ; j--) {
+//         for (let i = 0; i < matrix[j].length; i++) {
+//             if(matrix[j][i].positionY() === BOARD_SIZE-SIZE){
+//                 alert("You are looser!");
+//                 clearInterval(bombTimer);
+//                 window.location.reload();
+//             }
+//             else{
+//                 matrix[j][i].move(0, SIZE);
+//             }
+//         }
+//     }
+// }, 1000);
+
 const bombTimer = setInterval(() => {
     // 1. move existing bombs down and check for game over
     for (const bomb of bombs) {
@@ -44,10 +69,26 @@ addEventListener('keydown', (e) => {
             //bullet
             const bullet = new Ship(ship.positionX()+(SIZE/3), BOARD_SIZE - (SIZE), SIZE / 3, 'orange');
             board.appendChild(bullet.id());
+            //own version
+            // setInterval(() => {
+            //
+            //     if(bullet.positionY() === bomb.positionY()+SIZE && bullet.positionX()-(SIZE/3) === bomb.positionX()){
+            //
+            //         bullet.hide();
+            //     }else if(bullet.positionY() >= SIZE){
+            //         bullet.move(0, -SIZE)
+            //     }
+            //     else{
+            //         bullet.hide();
+            //     }
+            // }, 500);
+
             const bulletTimer = setInterval(() => {
                 const hit = bombs.find(b =>
                     b.positionX() === bullet.positionX() - SIZE / 3 &&
-                    b.positionY() + SIZE === bullet.positionY()+SIZE
+                    b.positionY() + (SIZE)  === bullet.positionY() ||
+                    b.positionX() === bullet.positionX() - SIZE / 3 &&
+                    b.positionY() + (-SIZE)  === bullet.positionY()
                 );
                 if (hit) {
                     hit.hide();
@@ -61,6 +102,7 @@ addEventListener('keydown', (e) => {
                     clearInterval(bulletTimer);
                 }
             }, 500);
+
             break;
         }
         case 'ArrowLeft':{
