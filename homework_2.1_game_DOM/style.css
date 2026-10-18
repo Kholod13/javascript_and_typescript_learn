@@ -1,0 +1,9 @@
+/* SIZE BOARD: 500px */
+#board{
+    position: relative;
+    border: 3px solid black;
+    width: 500px;
+    height: 500px;
+    margin: 10% auto;
+}
+
